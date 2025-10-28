@@ -5,6 +5,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Comercial Palermo - Registro</title>
   <link rel="stylesheet" href="styles.css">
+  <!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+<script>
+
+
+  // firebase.js
+const firebaseConfig = {
+  apiKey: "AIzaSyBXuUQeBNWcqtQ9O26_cQquQAJ7gTQuQvs",
+  authDomain: "comercialpalermo-fcc0d.firebaseapp.com",
+  projectId: "comercialpalermo-fcc0d",
+  storageBucket: "comercialpalermo-fcc0d.appspot.com",
+  messagingSenderId: "173867339544",
+  appId: "1:173867339544:web:YOUR_APP_ID" // Este campo es opcional para el funcionamiento básico, pero recomendado
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+
+</script>
+
 </head>
 <body>
   <div class="container">

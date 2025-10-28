@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buscar Productos - Comercial Palermo</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+  <div class="search-container">
+    <div class="search-bar-container">
+      <input type="text" placeholder="Search appliances..." id="searchInput">
+      <button id="searchButton"><i class="fas fa-search"></i></button>
+    </div>
+    <div class="filter-buttons">
+      <button id="filterByPrice">Filter by Price</button>
+      <button id="filterByBrand">Filter by Brand</button>
+    </div>
+    <!-- Contenedor con scroll para los productos -->
+    <div class="products-grid-container">
+      <div class="products-grid" id="productsGrid">
+        <!-- Los productos se cargarán aquí dinámicamente -->
+      </div>
+    </div>
+  </div>
+  <nav class="bottom-nav">
+    <a href="dashboard.html"><i class="fas fa-home"></i><span>Inicio</span></a>
+    <a href="buscar.html"><i class="fas fa-search"></i><span>Buscar</span></a>
+    <a href="carrito.html"><i class="fas fa-shopping-cart"></i><span>Carrito</span></a>
+    <a href="index.html"><i class="fas fa-user"></i><span>Usuario</span></a>
+  </nav>
+  <script src="buscar.js"></script>
+</body>
+</html>

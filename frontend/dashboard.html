@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comercial Palermo - Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+<a href="#" id="cartBtn"><i class="fas fa-shopping-cart"></i><span>Carrito</span></a>
+
+<div id="cartModal" style="display:none;">
+  <h3>Mi Carrito</h3>
+  <ul id="cartList"></ul>
+  <p id="cartTotal"></p>
+  <button id="checkoutBtn">Proceder al Pago</button>
+</div>
+
+
+
+  <div class="container">
+
+    <header class="header">
+      <input type="text" placeholder="Buscar productos..." class="search-bar">
+    </header>
+
+    <main class="products">
+      <div class="product">
+        <img src="img/refrigeradora.jpg" alt="Refrigeradora">
+        <h3>Refrigeradora</h3>
+        <button>Comprar</button>
+      </div>
+
+      <div class="product">
+        <img src="img/televisor.jpg" alt="Televisor">
+        <h3>Televisor</h3>
+        <button>Comprar</button>
+      </div>
+
+      <div class="product">
+        <img src="img/lavadora.jpg" alt="Lavadora">
+        <h3>Lavadora</h3>
+        <button>Comprar</button>
+      </div>
+
+      <div class="product">
+        <img src="img/microondas.jpg" alt="Microondas">
+        <h3>Microondas</h3>
+        <button>Comprar</button>
+      </div>
+    </main>
+
+    <nav class="bottom-nav">
+      <a href="dashboard.html"><i class="fas fa-home"></i><span>Inicio</span></a>
+      <a href="#"><i class="fas fa-search"></i><span>Buscar</span></a>
+      <a href="#"><i class="fas fa-shopping-cart"></i><span>Carrito</span></a>
+      <a href="#" id="logout"><i class="fas fa-sign-out-alt"></i><span>Salir</span></a>
+    </nav>
+  </div>
+
+  <script>
+    // ---------- Verificar sesión ----------
+    const loggedIn = localStorage.getItem("loggedIn") === "true";
+    if (!loggedIn) {
+      window.location.href = "inicio.html"; // si no está logueado, manda al inicio
+    }
+
+    // ---------- Limpiar producto seleccionado ----------
+    localStorage.removeItem("selectedProduct");
+
+    // ---------- Forzar recarga si viene del cache (botón Atrás) ----------
+    window.addEventListener('pageshow', function(event) {
+      if (event.persisted) {
+        window.location.reload();
+      }
+    });
+
+    // ---------- Manejo de botones Comprar ----------
+    document.addEventListener("click", (e) => {
+      if (e.target.textContent.trim() === "Comprar") {
+        const productCard = e.target.closest(".product");
+        if (!productCard) return;
+
+        const productName = productCard.querySelector("h3")?.textContent || "Producto";
+        const productImg = productCard.querySelector("img")?.src || "";
+
+
+        
+
+        // Precios dinámicos
+        let price = "89.99"; 
+        if (productName.toLowerCase().includes("refrigeradora")) price = "499.99";
+        if (productName.toLowerCase().includes("televisor")) price = "299.99";
+        if (productName.toLowerCase().includes("lavadora")) price = "399.99";
+        if (productName.toLowerCase().includes("microondas")) price = "99.99";
+
+        const product = {
+          name: productName,
+          img: productImg,
+          price: price,
+          description: "Producto de alta calidad para tu hogar.",
+          specs: [
+            "Capacidad: 1.5 L",
+            "Material: Acero inoxidable",
+            "Peso: 2.5 kg",
+            "Dimensiones: 15 x 12 x 20 cm"
+          ]
+        };
+
+        localStorage.setItem("selectedProduct", JSON.stringify(product));
+        window.location.href = "producto.html";
+      }
+    });
+
+    // ---------- Logout ----------
+    const logoutBtn = document.getElementById("logout");
+    logoutBtn.addEventListener("click", () => {
+      localStorage.removeItem("loggedIn");
+      window.location.href = "inicio.html";
+    });
+
+  const cartBtn = document.getElementById("cartBtn");
+  const cartModal = document.getElementById("cartModal");
+  const cartList = document.getElementById("cartList");
+  const cartTotal = document.getElementById("cartTotal");
+
+  cartBtn.addEventListener("click", () => {
+    cartModal.style.display = cartModal.style.display === "none" ? "block" : "none";
+
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    cartList.innerHTML = "";
+    let total = 0;
+
+    cart.forEach(item => {
+      const li = document.createElement("li");
+      li.textContent = `${item.name} - $${item.price} x ${item.quantity} = $${(item.price*item.quantity).toFixed(2)}`;
+      cartList.appendChild(li);
+      total += item.price*item.quantity;
+    });
+
+    cartTotal.textContent = `Total: $${total.toFixed(2)}`;
+  });
+    
+  </script>
+</body>
+</html>

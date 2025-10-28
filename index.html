@@ -5,6 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Comercial Palermo - Login</title>
   <link rel="stylesheet" href="frontend/styles.css">
+  <!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+<script>
+
+
+  // firebase.js
+const firebaseConfig = {
+  apiKey: "AlzaSyBXuUQeBNWcqtQ9O26_cQquQAJ7gTQuQvs",
+  authDomain: "comercialpalermo-fcc0d.firebaseapp.com",
+  projectId: "comercialpalermo-fcc0d",
+  storageBucket: "comercialpalermo-fcc0d.appspot.com",
+  messagingSenderId: "173867339544",
+  appId: "1:173867339544:web:YOUR_APP_ID" // Este valor no lo veo en la imagen, pero no es crítico para el funcionamiento básico
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+</script>
 </head>
 <body>
   <div class="container">

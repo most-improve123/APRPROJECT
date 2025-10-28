@@ -6,65 +6,77 @@
   <title>Comercial Palermo - Dashboard</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+  <script>
+
+// firebase.js
+const firebaseConfig = {
+  apiKey: "AIzaSyBXuUQeBNWcqtQ9O26_cQquQAJ7gTQuQvs",
+  authDomain: "comercialpalermo-fcc0d.firebaseapp.com",
+  projectId: "comercialpalermo-fcc0d",
+  storageBucket: "comercialpalermo-fcc0d.appspot.com",
+  messagingSenderId: "173867339544",
+  appId: "1:173867339544:web:YOUR_APP_ID" // Este campo es opcional para el funcionamiento básico, pero recomendado
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+
+</script>
 </head>
 <body>
-<a href="#" id="cartBtn"><i class="fas fa-shopping-cart"></i><span>Carrito</span></a>
-
-<div id="cartModal" style="display:none;">
-  <h3>Mi Carrito</h3>
-  <ul id="cartList"></ul>
-  <p id="cartTotal"></p>
-  <button id="checkoutBtn">Proceder al Pago</button>
-</div>
-
-
-
+  <a href="#" id="cartBtn"><i class="fas fa-shopping-cart"></i><span>Carrito</span></a>
+  <div id="cartModal" style="display:none;">
+    <h3>Mi Carrito</h3>
+    <ul id="cartList"></ul>
+    <p id="cartTotal"></p>
+    <button id="checkoutBtn">Proceder al Pago</button>
+  </div>
   <div class="container">
-
     <header class="header">
       <input type="text" placeholder="Buscar productos..." class="search-bar">
     </header>
-
     <main class="products">
       <div class="product">
-        <img src="img/refrigeradora.jpg" alt="Refrigeradora">
+        <img src="img/refrigeradora.png" alt="Refrigeradora">
         <h3>Refrigeradora</h3>
         <button>Comprar</button>
       </div>
-
       <div class="product">
-        <img src="img/televisor.jpg" alt="Televisor">
+        <img src="img/televisor.png" alt="Televisor">
         <h3>Televisor</h3>
         <button>Comprar</button>
       </div>
-
       <div class="product">
-        <img src="img/lavadora.jpg" alt="Lavadora">
+        <img src="img/lavadora.png" alt="Lavadora">
         <h3>Lavadora</h3>
         <button>Comprar</button>
       </div>
-
       <div class="product">
         <img src="img/microondas.jpg" alt="Microondas">
         <h3>Microondas</h3>
         <button>Comprar</button>
       </div>
     </main>
-
     <nav class="bottom-nav">
       <a href="dashboard.html"><i class="fas fa-home"></i><span>Inicio</span></a>
-      <a href="#"><i class="fas fa-search"></i><span>Buscar</span></a>
-      <a href="#"><i class="fas fa-shopping-cart"></i><span>Carrito</span></a>
+      <a href="buscar.html"><i class="fas fa-search"></i><span>Buscar</span></a>
+      <a href="carrito.html"><i class="fas fa-shopping-cart"></i><span>Carrito</span></a>
       <a href="#" id="logout"><i class="fas fa-sign-out-alt"></i><span>Salir</span></a>
     </nav>
   </div>
-
   <script>
-    // ---------- Verificar sesión ----------
-    const loggedIn = localStorage.getItem("loggedIn") === "true";
-    if (!loggedIn) {
-      window.location.href = "inicio.html"; // si no está logueado, manda al inicio
-    }
+    // Verifica el estado de autenticación al cargar la página
+    auth.onAuthStateChanged((user) => {
+      if (!user) {
+        window.location.href = "index.html";
+      }
+    });
 
     // ---------- Limpiar producto seleccionado ----------
     localStorage.removeItem("selectedProduct");
@@ -81,15 +93,10 @@
       if (e.target.textContent.trim() === "Comprar") {
         const productCard = e.target.closest(".product");
         if (!productCard) return;
-
         const productName = productCard.querySelector("h3")?.textContent || "Producto";
         const productImg = productCard.querySelector("img")?.src || "";
 
-
-        
-
-        // Precios dinámicos
-        let price = "89.99"; 
+        let price = "89.99";
         if (productName.toLowerCase().includes("refrigeradora")) price = "499.99";
         if (productName.toLowerCase().includes("televisor")) price = "299.99";
         if (productName.toLowerCase().includes("lavadora")) price = "399.99";
@@ -107,7 +114,6 @@
             "Dimensiones: 15 x 12 x 20 cm"
           ]
         };
-
         localStorage.setItem("selectedProduct", JSON.stringify(product));
         window.location.href = "producto.html";
       }
@@ -115,33 +121,34 @@
 
     // ---------- Logout ----------
     const logoutBtn = document.getElementById("logout");
-    logoutBtn.addEventListener("click", () => {
-      localStorage.removeItem("loggedIn");
-      window.location.href = "inicio.html";
+    logoutBtn.addEventListener("click", async () => {
+      try {
+        await auth.signOut();
+        localStorage.removeItem("loggedIn");
+        window.location.href = "index.html";
+      } catch (error) {
+        alert("Error al cerrar sesión: " + error.message);
+      }
     });
 
-  const cartBtn = document.getElementById("cartBtn");
-  const cartModal = document.getElementById("cartModal");
-  const cartList = document.getElementById("cartList");
-  const cartTotal = document.getElementById("cartTotal");
+    const cartBtn = document.getElementById("cartBtn");
+    const cartModal = document.getElementById("cartModal");
+    const cartList = document.getElementById("cartList");
+    const cartTotal = document.getElementById("cartTotal");
 
-  cartBtn.addEventListener("click", () => {
-    cartModal.style.display = cartModal.style.display === "none" ? "block" : "none";
-
-    const cart = JSON.parse(localStorage.getItem("cart")) || [];
-    cartList.innerHTML = "";
-    let total = 0;
-
-    cart.forEach(item => {
-      const li = document.createElement("li");
-      li.textContent = `${item.name} - $${item.price} x ${item.quantity} = $${(item.price*item.quantity).toFixed(2)}`;
-      cartList.appendChild(li);
-      total += item.price*item.quantity;
+    cartBtn.addEventListener("click", () => {
+      cartModal.style.display = cartModal.style.display === "none" ? "block" : "none";
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      cartList.innerHTML = "";
+      let total = 0;
+      cart.forEach(item => {
+        const li = document.createElement("li");
+        li.textContent = `${item.name} - $${item.price} x ${item.quantity} = $${(item.price*item.quantity).toFixed(2)}`;
+        cartList.appendChild(li);
+        total += item.price*item.quantity;
+      });
+      cartTotal.textContent = `Total: $${total.toFixed(2)}`;
     });
-
-    cartTotal.textContent = `Total: $${total.toFixed(2)}`;
-  });
-    
   </script>
 </body>
 </html>
